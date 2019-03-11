@@ -1,6 +1,6 @@
 //// URL variables for AJAX calls
 //let patientData = "/patient/all";
-let loginURL = "/login";
+//let signupURL = "/signup";
 //
 ////// On DOM Load
 ////document.addEventListener("DOMContentLoaded", pageRefresh);
@@ -9,16 +9,16 @@ let loginURL = "/login";
 ////document.getElementById("patient-update-button").addEventListener("click", updatePatient);
 ////document.getElementById("patient-delete-button").addEventListener("click", deletePatient);
 
-document.addEventListener("DOMContentLoaded", loginError);
-
-function loginError(){
-	sendAjaxGet(loginURL, loginMessage);
-}
-
-function loginMessage(xhr){
-	let data = JSON.parse(xhr.response);
-	console.log(data);
-}
+//document.addEventListener("DOMContentLoaded", signupError);
+//
+//function signupError(){
+//	sendAjaxGet(signupURL, signupMessage);
+//}
+//
+//function signupMessage(xhr){
+//	let data = JSON.parse(xhr.response);
+//	console.log(data);
+//}
 
 
 //
