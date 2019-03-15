@@ -21,4 +21,58 @@
 		<url-pattern>/signup</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>logoutServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.logoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>logoutServlet</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EmployeeServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.EmployeeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EmployeeServlet</servlet-name>
+		<url-pattern>/employee</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EDashboardServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.EDashboardServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EDashboardServlet</servlet-name>
+		<url-pattern>/edashboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>TicketServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.TicketServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TicketServlet</servlet-name>
+		<url-pattern>/ticket</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>newTicketServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.newTicketServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>newTicketServlet</servlet-name>
+		<url-pattern>/ticket/new</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ETicketsServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.ETicketsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ETicketsServlet</servlet-name>
+		<url-pattern>/mytickets</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

@@ -18,6 +18,15 @@
 	        crossorigin="anonymous"></script>
 	</head>
 	<body>
+	
+	<%
+	//allow access only if session does not exist
+	String user = null;
+	if(session.getAttribute("user") != null){
+		response.sendRedirect("edashboard");
+	}
+	%>
+	
 		<div class="container">
 			<h2 class="text-center my-5">Expense Reimbursement System</h2>
 		    <div class="row">
@@ -25,15 +34,15 @@
 		        <div class="card card-signin my-4">
 		          <div class="card-body">
 		            <h5 class="card-title text-center">Sign Up</h5>
-		            <form class="form-signup" action="signup" method="POST">
+		            <form class="form-signup">
 		              <div class="form-label-group">
-		             	
+		             	<label for="inputEmail">Email address</label>
 		                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
 		              </div>
 		              
 		              <div class="form-label-group">
-		             	<label for="inputUsername">Username</label>
-		                <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required>
+		             	<label for="inputName">Name</label>
+		                <input type="text" name="name" id="inputName" class="form-control" placeholder="Name" required>
 		              </div>
 		
 		              <div class="form-label-group">
@@ -48,25 +57,22 @@
 		              
 		        	  <div class="mb-3">
 		        	  </div>
-		
-		              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign Up</button>
 	             	 </form>
+	             	 <button class="btn btn-lg btn-primary btn-block text-uppercase" id="signupButton" type="button">Sign Up</button>
 	             	 <hr class="my-4">
 	             	 <p><sub>Already have an account?</sub></p>
-		             <button class="btn btn-block text-uppercase" onclick="location.href = 'login.html';" type="submit">Login</button>
+		             <button class="btn btn-block text-uppercase" onclick="window.location.replace('http://localhost:8080/ers/login');" type="submit">Login</button>
 		          </div>
 		        </div>
 		        
 		        <div class="text-center">
-		        	<span id="signup-error" class="center-alignt"></span>
+		        	<span id="signup-error" class="center-align" style="color: red"></span>
 		        </div>
 		        
 		      </div>
 		    </div>
 		  </div>
-	
-	
-	<script src="signupJS.js"></script>
+		<script src="js/signupJS.js"></script>
 	</body>
 	
 </html>
