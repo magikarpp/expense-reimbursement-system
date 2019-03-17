@@ -38,7 +38,7 @@
 					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mytickets');" class="list-group-item list-group-item-action">Tickets</a>
 					<a href="#" class="list-group-item list-group-item-action bg-light">Manager</a>
-					<a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
+					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action bg-light">Profile</a>
 				</div>
 		   </div>
 		
@@ -49,7 +49,7 @@
 			<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
 				<h5>Expense Reimbursement System <small>(Employee)</small></h5>
 			
-			  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			  	<div class="collapse navbar-collapse top-navvy" id="navbarSupportedContent">
 			    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
 			      	<li class="nav-item dropdown">
 			        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
@@ -115,12 +115,60 @@
 			
 				<!-- TICKETS -->
 				<div class="ticket-container">
-					<h5 class="mt-4">Tickets <small>(Your most recent)</small></h5>
+					<h5 class="mt-4" id="ticket-title">My Tickets</h5>
+					<div class="m-2">
+						<button id="all-tickets" class="btn btn-secondary">All</button>
+						<button id="approved-tickets" class="btn">Approved</button>
+						<button id="pending-tickets" class="btn">Pending</button>
+						<button id="declined-tickets" class="btn">Declined</button>
+					</div>
 					<div id="ticketsRow" class="row">
 					  
 					</div>
 				</div>
 				<!-- end of TICKETS -->
+				
+				<!-- FILLER -->
+				<div id="ticketsRow" class="row">
+				
+				  <div id="ticket1" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				    <div class="card h-50">
+				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+				      <div class="card-body">
+				        <h5 class="card-title">
+				          <a href="#">Filler Ticket</a>
+				        </h5>
+				        <p class="card-text">Filler</p>
+				      </div>
+					</div>
+				  </div>
+				  
+				  <div id="ticket2" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				    <div class="card h-50">
+				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+				      <div class="card-body">
+				        <h5 class="card-title">
+				          <a href="#">Filler Ticket</a>
+				        </h5>
+				        <p class="card-text">Filler</p>
+				      </div>
+					</div>
+				  </div>
+				  
+				  <div id="ticket3" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				    <div class="card h-50">
+				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+				      <div class="card-body">
+				        <h5 class="card-title">
+				          <a href="#">Filler Ticket</a>
+				        </h5>
+				        <p class="card-text">Filler</p>
+				      </div>
+					</div>
+				  </div>
+				  
+				</div>
+				<!-- end of FILLER -->
 				
 				<!-- FEEDER -->
 				<div class="bottom-feeder">

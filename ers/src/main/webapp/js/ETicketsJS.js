@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", updateProfile);
 document.addEventListener("DOMContentLoaded", updateTicket);
 document.getElementById("createTicketButton").addEventListener("click", createNewTicket);
 
+document.getElementById("all-tickets").addEventListener("click", updateTicket);
+document.getElementById("approved-tickets").addEventListener("click", approvedTickets);
+document.getElementById("pending-tickets").addEventListener("click", pendingTickets);
+document.getElementById("declined-tickets").addEventListener("click", declinedTickets);
+
 currentUser = {
 		"email" : currentUserEmail,
 		"name" : null,
@@ -23,7 +28,42 @@ function updateProfile(){
 
 function updateTicket(){
 	// For Info
+	document.getElementById("all-tickets").className = "btn btn-secondary";
+	document.getElementById("approved-tickets").className = "btn";
+	document.getElementById("pending-tickets").className = "btn";
+	document.getElementById("declined-tickets").className = "btn";
+	
 	sendAjaxPost(ticketURL, updateTicketInfo, currentUser);
+}
+
+function approvedTickets(){
+	// For Info
+	document.getElementById("all-tickets").className = "btn";
+	document.getElementById("approved-tickets").className = "btn btn-secondary";
+	document.getElementById("pending-tickets").className = "btn";
+	document.getElementById("declined-tickets").className = "btn";
+	
+	sendAjaxPost(ticketURL, approvedTicketsInfo, currentUser);
+}
+
+function pendingTickets(){
+	// For Info
+	document.getElementById("all-tickets").className = "btn";
+	document.getElementById("approved-tickets").className = "btn";
+	document.getElementById("pending-tickets").className = "btn btn-secondary";
+	document.getElementById("declined-tickets").className = "btn";
+	
+	sendAjaxPost(ticketURL, pendingTicketsInfo, currentUser);
+}
+
+function declinedTickets(){
+	// For Info
+	document.getElementById("all-tickets").className = "btn";
+	document.getElementById("approved-tickets").className = "btn";
+	document.getElementById("pending-tickets").className = "btn";
+	document.getElementById("declined-tickets").className = "btn btn-secondary";
+	
+	sendAjaxPost(ticketURL, declinedTicketsInfo, currentUser);
 }
 
 function updateProfileInfo(xhr, currentUser){
@@ -60,24 +100,140 @@ function updateTicketInfo(xhr, currentUser){
 	    return a.date < b.date;
 	});
 	
-	if(data.length == 0){
-		document.getElementById("ticketsRow").innerHTML =
-			"<div style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\">"
+	document.getElementById("ticketsRow").innerHTML = "";
+	
+	for(i = 0; i < data.length; i++){
+		let ticketId = "ticket" + (i + 1);
+		
+		document.getElementById("ticketsRow").innerHTML += "<div id=" + ticketId + " style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\"></div>";
+		document.getElementById(ticketId).setAttribute("style", "");
+		
+		let statusStyle = "";
+		
+		if(data[i].status == "approved"){
+			statusStyle = "color : green";
+		} else if(data[i].status == "declined"){
+			statusStyle = "color : red";
+		} else if(data[i].status == "pending"){
+			statusStyle = "color : orange";
+		} else{ }
+		
+		document.getElementById(ticketId).innerHTML =
+		"<div class=\"card h-100\"> " +
+			"<img class=\"card-img-top\" src=\"http://placehold.it/700x400\" alt=\"\"> " +
+				"<div class=\"card-body\"> " +
+					"<h5 class=\"card-title\"> " +
+						"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
+					"</h5> " +
+					"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+					"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
+					"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
+					"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
+				"</div> </div>";
+	}
+	
+}
+
+function approvedTicketsInfo(xhr, currentUser){
+	let data = JSON.parse(xhr.response);
+	
+	data.sort(function (a, b) {
+	    return a.date < b.date;
+	});
+	
+	document.getElementById("ticketsRow").innerHTML = "";
+	
+	for(i = 0; i < data.length; i++){
+		if(data[i].status == "approved"){
+			let ticketId = "ticket" + (i + 1);
+			
+			document.getElementById("ticketsRow").innerHTML += "<div id=" + ticketId + " style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\"></div>";
+			document.getElementById(ticketId).setAttribute("style", "");
+			
+			let statusStyle = "";
+			
+			if(data[i].status == "approved"){
+				statusStyle = "color : green";
+			} else if(data[i].status == "declined"){
+				statusStyle = "color : red";
+			} else if(data[i].status == "pending"){
+				statusStyle = "color : orange";
+			} else{ }
+			
+			document.getElementById(ticketId).innerHTML =
 			"<div class=\"card h-100\"> " +
 				"<img class=\"card-img-top\" src=\"http://placehold.it/700x400\" alt=\"\"> " +
 					"<div class=\"card-body\"> " +
 						"<h5 class=\"card-title\"> " +
-							"<p style=\"color : darkturquoise\"\">Ticket ID: </p> " +
+							"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 						"</h5> " +
-						"<p class=\"card-text\" style=\"" + statusStyle + "\"> </p> " +
-						"<p class=\"card-text\">Date: </p> " +
-						"<p class=\"card-text\">Amount: $ </p> " +
-						"<p class=\"card-text\">Category: </p> " +
-					"</div> </div> </div>";
-	} else{
-		for(i = 0; i < data.length; i++){
+						"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+						"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
+						"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
+						"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
+					"</div> </div>";
+		}
+	}
+	
+}
+
+function pendingTicketsInfo(xhr, currentUser){
+	let data = JSON.parse(xhr.response);
+	
+	data.sort(function (a, b) {
+	    return a.date < b.date;
+	});
+	
+	document.getElementById("ticketsRow").innerHTML = "";
+	
+	for(i = 0; i < data.length; i++){
+		if(data[i].status == "pending"){
 			let ticketId = "ticket" + (i + 1);
-			document.getElementById("ticketsRow").innerHTML += "<div id=" + ticketId + " style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\"></div>"
+			
+			document.getElementById("ticketsRow").innerHTML += "<div id=" + ticketId + " style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\"></div>";
+			document.getElementById(ticketId).setAttribute("style", "");
+			
+			let statusStyle = "";
+			
+			if(data[i].status == "approved"){
+				statusStyle = "color : green";
+			} else if(data[i].status == "declined"){
+				statusStyle = "color : red";
+			} else if(data[i].status == "pending"){
+				statusStyle = "color : orange";
+			} else{ }
+			
+			document.getElementById(ticketId).innerHTML =
+			"<div class=\"card h-100\"> " +
+				"<img class=\"card-img-top\" src=\"http://placehold.it/700x400\" alt=\"\"> " +
+					"<div class=\"card-body\"> " +
+						"<h5 class=\"card-title\"> " +
+							"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
+						"</h5> " +
+						"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+						"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
+						"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
+						"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
+					"</div> </div>";
+		}
+	}
+	
+}
+
+function declinedTicketsInfo(xhr, currentUser){
+	let data = JSON.parse(xhr.response);
+	
+	data.sort(function (a, b) {
+	    return a.date < b.date;
+	});
+	
+	document.getElementById("ticketsRow").innerHTML = "";
+	
+	for(i = 0; i < data.length; i++){
+		if(data[i].status == "declined"){
+			let ticketId = "ticket" + (i + 1);
+			
+			document.getElementById("ticketsRow").innerHTML += "<div id=" + ticketId + " style=\"visibility : hidden\" class=\"col-lg-3 col-md-4 col-sm-6 mb-4\"></div>";
 			document.getElementById(ticketId).setAttribute("style", "");
 			
 			let statusStyle = "";

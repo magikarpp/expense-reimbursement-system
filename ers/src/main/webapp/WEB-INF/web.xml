@@ -75,4 +75,22 @@
 		<url-pattern>/mytickets</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>ProfileServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.ProfileServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProfileServlet</servlet-name>
+		<url-pattern>/profile</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>updateEmployeeServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.updateEmployeeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>updateEmployeeServlet</servlet-name>
+		<url-pattern>/employee/update</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

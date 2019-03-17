@@ -2,7 +2,6 @@ package com.revature.main.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.main.handlers.Handler;
-import com.revature.main.models.Employee;
 import com.revature.main.models.Ticket;
 
 public class newTicketServlet extends HttpServlet {

@@ -37,7 +37,7 @@ function checkSuccess(xhr, newEmployee){
 	} else{
 		console.log(data);
 		document.getElementById("signup-error").style = "color : red";
-		document.getElementById("signup-error").innerHTML = "Email already in use, please try again.";
+		document.getElementById("signup-error").innerHTML = "Email not valid, please try again.";
 	}
 }
 

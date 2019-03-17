@@ -35,10 +35,10 @@
 		 	<div class="bg-light border-right" id="sidebar-wrapper">
 			   	<div class="sidebar-heading"></div>
 				<div class="list-group list-group-flush">
-					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action">Dashboard</a>
+					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mytickets');" class="list-group-item list-group-item-action bg-light">Tickets</a>
 					<a href="#" class="list-group-item list-group-item-action bg-light">Manager</a>
-					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action bg-light">Profile</a>
+					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action">Profile</a>
 				</div>
 		   </div>
 		
@@ -119,15 +119,15 @@
 					<div class="box">
 						<div class="column-split">
 							<h6>Email:</h6>
-							<h6><%=user %></h6>
+							<h6 id="userEmailInfo"><%=user %></h6>
+							<input type="email" style="visibility: hidden; display: none;" id="newEmail" required>
 						</div>
 						<div class="column-split">
 							<h6>Name:</h6>
-							<h6 id="userName"></h6>
+							<h6 id="userNameInfo"></h6>
+							<input type="text" style="visibility: hidden; display: none;" id="newName" required>
 						</div>
 						<div class="column-split">
-							<h6>Total Tickets:</h6>
-							<h6 id="userTicketAmount"></h6>
 						</div>
 					</div>	
 					<div class="box">
@@ -140,17 +140,25 @@
 							<h6 id="userManager"></h6>
 						</div>
 						<div class="column-split">
+							<h6>Is Manager?</h6>
+							<h6 id="isManager"></h6>
 						</div>
 					</div>
 				</div>
+				
+				<button class="btn m-3" id="editInfoButton" type="button">Edit Information</button>
+				<button class="btn m-3" style="visibility: hidden; display: none" id="submitInfo" type="button">Submit</button>
+				<button class="btn m-3" style="visibility: hidden; display: none" id="cancelInfo" type="button">Cancel</button>
+				<div class="m-2">
+		        	<span id="update-error" class="center-alignt" style="color: red"></span>
+		        </div>
 				<!-- end of PROFLE -->
-			
-				<!-- TICKETS -->
-				<h5 class="mt-4">Tickets <small>(Your most recent)</small></h5>
+				
+				<!-- FILLER -->
 				<div id="ticketsRow" class="row">
 				
 				  <div id="ticket1" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -162,7 +170,7 @@
 				  </div>
 				  
 				  <div id="ticket2" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -174,7 +182,7 @@
 				  </div>
 				  
 				  <div id="ticket3" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -186,15 +194,7 @@
 				  </div>
 				  
 				</div>
-				
-				<!-- end of TICKETS -->
-				
-				<!-- CHARTS -->
-				<div class="mt-5" id="chartContainer0" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				<div class="mt-5" id="chartContainer1" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				<div class="mt-5" id="chartContainer2" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				
-				<!-- end of CHARTS -->
+				<!-- end of FILLER -->
 				
 				<!-- FEEDER -->
 				<div class="bottom-feeder">
@@ -210,7 +210,7 @@
 		
 	 </div>
 	
-	<script src="js/EDashboardJS.js"></script>
+	<script src="js/profileJS.js"></script>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	</body>
 

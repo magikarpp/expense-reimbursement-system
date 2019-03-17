@@ -24,18 +24,16 @@ public class Handler {
 			
 			ps.setString(1, email);
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				String eemail = rs.getString("Email");
-				String name = rs.getString("Name");
-				String password = rs.getString("Password");
-				int ismanager = rs.getInt("IsManager");
-				String reportsto = rs.getString("Reportsto");
-				tempEmployee = new Employee(eemail, name, password, ismanager, reportsto);
+			try(ResultSet rs = ps.executeQuery();){
+				while(rs.next()) {
+					String eemail = rs.getString("Email");
+					String name = rs.getString("Name");
+					String password = rs.getString("Password");
+					int ismanager = rs.getInt("IsManager");
+					String reportsto = rs.getString("Reportsto");
+					tempEmployee = new Employee(eemail, name, password, ismanager, reportsto);
+				}
 			}
-			
-			rs.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -56,16 +54,16 @@ public class Handler {
 		try(Connection con = ConnectionUtil.getConnectionFromFile();
 			PreparedStatement ps = con.prepareStatement(sql);){
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				String eemail = rs.getString("Email");
-				String name = rs.getString("Name");
-				String password = rs.getString("Password");
-				int ismanager = rs.getInt("IsManager");
-				String reportsto = rs.getString("Reportsto");
-				tempEmployee = new Employee(eemail, name, password, ismanager, reportsto);
-				allEmployees.add(tempEmployee);
+			try(ResultSet rs = ps.executeQuery();){
+				while(rs.next()) {
+					String eemail = rs.getString("Email");
+					String name = rs.getString("Name");
+					String password = rs.getString("Password");
+					int ismanager = rs.getInt("IsManager");
+					String reportsto = rs.getString("Reportsto");
+					tempEmployee = new Employee(eemail, name, password, ismanager, reportsto);
+					allEmployees.add(tempEmployee);
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -75,6 +73,89 @@ public class Handler {
 		}
 		
 		return allEmployees;
+	}
+	
+	public boolean updateEmployee(String email, Employee employee) {
+		boolean updated = true;
+		
+		if(employeeExists(email)) {
+			if(email.equals(employee.getEmail())) {
+				String sql1 = "UPDATE Employee SET Email = ?, Name = ?, IsManager = ?, ReportsTo = ? WHERE Email = ?";
+				
+				try(Connection con = ConnectionUtil.getConnectionFromFile();
+					PreparedStatement ps = con.prepareStatement(sql1);){
+					
+					ps.setString(1, employee.getEmail());
+					ps.setString(2, employee.getName());
+					ps.setInt(3, employee.getIsmanager());
+					ps.setString(4, employee.getReportsto());
+					ps.setString(5, email);
+					ps.executeUpdate();
+						
+				} catch (SQLException e) {
+					updated = false;
+					e.printStackTrace();
+				} catch (IOException e1) {
+					updated = false;
+					e1.printStackTrace();
+				}
+			} else {
+				if(!employeeExists(employee.getEmail())) {
+					String sql = "INSERT INTO Employee VALUES (?, ?, ?, ?, ?)";
+					
+					try(Connection con = ConnectionUtil.getConnectionFromFile();
+						PreparedStatement ps = con.prepareStatement(sql);){
+						
+						ps.setString(1, employee.getEmail());
+						ps.setString(2, employee.getName());
+						ps.setString(3, employee.getPassword());
+						ps.setInt(4, employee.getIsmanager());
+						ps.setString(5, employee.getReportsto());
+						ps.executeUpdate();
+							
+					} catch (SQLException | IOException e) {
+						updated = false;
+						e.printStackTrace();
+					}
+					
+					if(updated) {
+						String sql1 = "UPDATE Ticket SET Email = ? WHERE Email = ?";
+						
+						try(Connection con = ConnectionUtil.getConnectionFromFile();
+							PreparedStatement ps = con.prepareStatement(sql1);){
+							
+							ps.setString(1, employee.getEmail());
+							ps.setString(2, email);
+							ps.executeUpdate();
+							 	
+						} catch (SQLException e) {
+							updated = false;
+							e.printStackTrace();
+						} catch (IOException e1) {
+							updated = false;
+							e1.printStackTrace();
+						}
+						
+						String sql2 = "DELETE FROM Employee WHERE Email = ?";
+						
+						try(Connection con = ConnectionUtil.getConnectionFromFile();
+							PreparedStatement ps = con.prepareStatement(sql2);){
+							
+							ps.setString(1, email);
+							ps.executeUpdate();
+								
+						} catch (SQLException | IOException e) {
+							updated = false;
+							e.printStackTrace();
+						}
+					}
+				} else {
+					updated = false;
+				}
+			}
+		}
+		
+		return updated;
 	}
 	
 	// Does Employee Exist?
@@ -88,10 +169,10 @@ public class Handler {
 			
 			ps.setString(1, email);
 			
-			ResultSet rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				exists = true;
+			try(ResultSet rs = ps.executeQuery();){
+				if(rs.next()) {
+					exists = true;
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -153,12 +234,12 @@ public class Handler {
 		try(Connection con = ConnectionUtil.getConnectionFromFile();
 			PreparedStatement ps = con.prepareStatement(sql0);){
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				id = rs.getInt("Top") + 1;
+			try(ResultSet rs = ps.executeQuery();){
+				while(rs.next()) {
+					id = rs.getInt("Top") + 1;
+				}
 			}
-					
+				
 		} catch (SQLException | IOException e) {
 			System.out.println("Ticket Failed to create.");
 			e.printStackTrace();
@@ -197,21 +278,19 @@ public class Handler {
 			
 			ps.setString(1, email);
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				int id = rs.getInt("Id");
-				Timestamp date = rs.getTimestamp("TDate");
-				double amount = rs.getDouble("Amount");
-				String category = rs.getString("Category");
-				String status = rs.getString("Status");
-				String uemail = rs.getString("Email");
-				
-				Ticket tempTicket = new Ticket(id, date, amount, category, status, uemail);
-				userTickets.add(tempTicket);
+			try(ResultSet rs = ps.executeQuery();){
+				while(rs.next()) {
+					int id = rs.getInt("Id");
+					Timestamp date = rs.getTimestamp("TDate");
+					double amount = rs.getDouble("Amount");
+					String category = rs.getString("Category");
+					String status = rs.getString("Status");
+					String uemail = rs.getString("Email");
+					
+					Ticket tempTicket = new Ticket(id, date, amount, category, status, uemail);
+					userTickets.add(tempTicket);
+				}
 			}
-			
-			rs.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -231,21 +310,19 @@ public class Handler {
 		try(Connection con = ConnectionUtil.getConnectionFromFile();
 			PreparedStatement ps = con.prepareStatement(sql);){
 			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				int id = rs.getInt("Id");
-				Timestamp date = rs.getTimestamp("TDate");
-				double amount = rs.getDouble("Amount");
-				String category = rs.getString("Category");
-				String status = rs.getString("Status");
-				String uemail = rs.getString("Email");
-				
-				Ticket tempTicket = new Ticket(id, date, amount, category, status, uemail);
-				userTickets.add(tempTicket);
+			try(ResultSet rs = ps.executeQuery();){
+				while(rs.next()) {
+					int id = rs.getInt("Id");
+					Timestamp date = rs.getTimestamp("TDate");
+					double amount = rs.getDouble("Amount");
+					String category = rs.getString("Category");
+					String status = rs.getString("Status");
+					String uemail = rs.getString("Email");
+					
+					Ticket tempTicket = new Ticket(id, date, amount, category, status, uemail);
+					userTickets.add(tempTicket);
+				}
 			}
-			
-			rs.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
