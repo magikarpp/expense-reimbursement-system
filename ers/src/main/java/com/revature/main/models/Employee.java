@@ -6,6 +6,7 @@ public class Employee {
 	private String password;
 	private int ismanager;
 	private String reportsto;
+	private String dummy;
 	
 	public Employee() {
 		email = "";
@@ -21,6 +22,15 @@ public class Employee {
 		this.password = password;
 		this.ismanager = ismanager;
 		this.reportsto = reportsto;
+	}
+	
+	public Employee(String email, String name, String password, int ismanager, String reportsto, String dummy) {
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.ismanager = ismanager;
+		this.reportsto = reportsto;
+		this.dummy = dummy;
 	}
 	
 	public String getEmail() {
@@ -62,6 +72,14 @@ public class Employee {
 	public String toString() {
 		return "Employee [email=" + email + ", name=" + name + ", password=" + password + ", ismanager=" + ismanager
 				+ ", reportsto=" + reportsto + "]";
+	}
+
+	public String getDummy() {
+		return dummy;
+	}
+
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
 	}
 	
 	

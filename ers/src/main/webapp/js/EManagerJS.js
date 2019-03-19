@@ -2,17 +2,15 @@
 let employeeURL = "employee";
 let ticketURL = "ticket";
 let newTicketURL = "ticket/new";
-let updateEmployeeURL = "employee/update"
+let passwordURL = "manager/validate";
 
 let currentUserEmail = document.getElementById("userEmail").innerHTML;
 
 document.addEventListener("DOMContentLoaded", updateProfile);
 document.getElementById("createTicketButton").addEventListener("click", createNewTicket);
-document.getElementById("editInfoButton").addEventListener("click", editInfoAjax);
-document.getElementById("submitInfo").addEventListener("click", submitInfo0);
-document.getElementById("cancelInfo").addEventListener("click", cancelInfo);
+document.getElementById("becomeManagerButton").addEventListener("click", checkManagerPassword);
 
-currentUser = {
+let currentUser = {
 		"email" : currentUserEmail,
 		"name" : null,
 		"password" : null,
@@ -20,95 +18,21 @@ currentUser = {
 		"reportsto" : null
 	};
 
-function editInfoAjax(){
-	sendAjaxPost(employeeURL, editInfo, currentUser);
-}
-
-function editInfo(xhr, currentUser){
-	let data = JSON.parse(xhr.response);
-	
-	document.getElementById("editInfoButton").style = "visiblity: hidden; display: none;";
-	document.getElementById("submitInfo").style = "";
-	document.getElementById("cancelInfo").style = "";
-	document.getElementById("passwordConfirm").style = "";
-	
-	document.getElementById("newEmail").style = "";
-	document.getElementById("newName").style = "";
-	document.getElementById("newEmail").value = data[0].email;
-	document.getElementById("newName").value = data[0].name;
-	
-	document.getElementById("newPassword").style = "";
-	document.getElementById("newPassword2").style = "";
-	document.getElementById("newPassword").value = data[0].password;
-	document.getElementById("newPassword2").value = data[0].password;
-	
-	document.getElementById("userNameInfo").style = "visiblity: hidden; display: none;";
-	document.getElementById("userEmailInfo").style = "visiblity: hidden; display: none;";
-	document.getElementById("passwordInfo").style = "visiblity: hidden; display: none;";
-}
-
-function cancelInfo(){
-	window.location.replace('/ers/profile');
-}
-
-function submitInfo0(){
-	sendAjaxPost(employeeURL, submitInfo, currentUser);
-}
-
-function submitInfo(xhr, currentUser){
-	let data = JSON.parse(xhr.response);
-	
-	if(document.getElementById("newPassword").value != document.getElementById("newPassword2").value){
-		document.getElementById("update-error").style = "color : red";
-		document.getElementById("update-error").innerHTML = "Password does not match. Please try again.";
-	} else{
-		updateUser = {
-				"email" : document.getElementById("newEmail").value,
-				"name" : document.getElementById("newName").value,
-				"password" : document.getElementById("newPassword").value,
-				"ismanager" : data[0].ismanager,
-				"reportsto" : data[0].reportsto,
-				"dummy" : currentUserEmail
-			};
-			
-			document.getElementById("update-error").style = "color : orange";
-			document.getElementById("update-error").innerHTML = "Updating Info...";
-			
-			sendAjaxPost(updateEmployeeURL, updatedInfo, updateUser);
-	}
-}
-
-function updatedInfo(xhr, user){
-	let data = xhr.response;
-	
-	if(data == "success"){
-		document.getElementById("logoutForm").submit();
-	} else{
-		console.log(data);
-		document.getElementById("update-error").style = "color : red";
-		document.getElementById("update-error").innerHTML = "Email already in use. Please try again.";
-	}
-}
-
 function updateProfile(){
 	sendAjaxPost(employeeURL, updateProfileInfo, currentUser);
-}
-
-function updateTicket(){
-	// For Info & Charts
-	sendAjaxPost(ticketURL, updateTicketInfo, currentUser);
 }
 
 function createNewTicket(){
 	let selected = document.getElementById("category");
 	
-	ticket = {
+	let ticket = {
 		"id" : null,
 		"date" : null,
 		"amount" : document.getElementById("newTicketAmount").value,
 		"category" : selected.options[selected.selectedIndex].text,
 		"status" : "pending",
-		"email" : currentUserEmail
+		"email" : currentUserEmail,
+		"resolvedBy" : null,
 	};
 	
 	document.getElementById("ticket-error").style = "color : orange";
@@ -119,23 +43,19 @@ function createNewTicket(){
 
 function updateProfileInfo(xhr, currentUser){
 	let data = JSON.parse(xhr.response);
-	let dummy = "";
-	for(i=0; i<data[0].password.length; i++){
-		dummy += "*";
-	}
-	document.getElementById("userNameInfo").innerHTML = data[0].name;
-	document.getElementById("passwordInfo").innerHTML = dummy;
 	
 	if(data[0].ismanager == 0){
 		document.getElementById("isManager").innerHTML = "No";
+		document.getElementById("beManagerButton").style = "";
 		
 		document.getElementById("changeView").style.display="none";
 		document.getElementById("changeView").style.visibility="hidden";
-	} else {
+	} else {		
 		document.getElementById("isManager").innerHTML = "Yes";
 	}
 	
 	if(data[0].reportsto == null){
+		
 		document.getElementById("userManagerEmail").innerHTML = "None";
 		document.getElementById("userManager").innerHTML = "None";
 	} else{
@@ -146,8 +66,7 @@ function updateProfileInfo(xhr, currentUser){
 }
 
 function newTicket(xhr, ticket){
-	let data = xhr.response
-	console.log(data);
+	let data = xhr.response;
 	if(data == "success"){
 		window.location.replace("edashboard");
 	} else{
@@ -156,10 +75,38 @@ function newTicket(xhr, ticket){
 	}
 }
 
+function checkManagerPassword(){
+	let inputedPassword = document.getElementById("managerPassword").value;
+	
+	if(inputedPassword == "" || inputedPassword == undefined){
+		document.getElementById("manager-error").style = "color: red";
+		document.getElementById("manager-error").value = "Please input a valid password.";
+	} else{
+		document.getElementById("manager-error").style = "color : orange";
+		document.getElementById("manager-error").innerHTML = "Validating Password...";
+				
+		let password = document.getElementById("managerPassword").value + " " + currentUserEmail;
+		
+		sendAjaxPost(passwordURL, managerPasswordResult, password);
+	}
+}
+
+function managerPasswordResult(xhr, password){
+	let data = xhr.response;
+	
+	if(data == "success"){
+		window.location.replace("mdashboard");
+	} else{
+		document.getElementById("manager-error").style = "color : red";
+		document.getElementById("manager-error").innerHTML = "Incorrect Manager Password. Please try again.";
+	}
+}
+
 //global functions
-function createSomething(tag, id, referenceNode){
+function createSomething(tag, id, style, referenceNode){
 	let created = document.createElement(tag);
 	created.setAttribute("id", id);
+	created.setAttribute("style", style);
 	insertAfter(created, referenceNode);
 }
 

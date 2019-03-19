@@ -1,11 +1,11 @@
-DROP TABLE Employee;
 DROP TABLE Ticket;
-
-DELETE
-FROM Employee;
+DROP TABLE Employee;
 
 DELETE
 FROM Ticket;
+
+DELETE
+FROM Employee;
 
 commit;
 
@@ -25,14 +25,25 @@ CREATE TABLE Ticket (
     Category VARCHAR2(25),
     Status VARCHAR2(25) NOT NULL,
     Email VARCHAR2(50) NOT NULL,
+    ResolvedBy VARCHAR2(50),
     CONSTRAINT PK_Ticket PRIMARY KEY (Id)
+);
+
+CREATE TABLE ManagerPassword (
+    password VARCHAR(25) NOT NULL,
+    CONSTRAINT PK_password PRIMARY KEY (password)
 );
 
 ALTER TABLE Ticket ADD CONSTRAINT FK_TEmployee
     FOREIGN KEY (Email) REFERENCES Employee (Email);
     
+ALTER TABLE Ticket ADD CONSTRAINT FK_TResolvedBy
+    FOREIGN KEY (ResolvedBy) REFERENCES Employee (Email);
+    
 ALTER TABLE Employee ADD CONSTRAINT FK_EReportsTo
     FOREIGN KEY (ReportsTo) REFERENCES Employee (Email);
+
+
     
 INSERT INTO Ticket VALUES(1, timestamp '2018-08-21 04:01:00.00', 100.00, 'Recreational', 'approved', 'shimjay1@gmail.com');
 INSERT INTO Ticket VALUES(2, timestamp '2018-08-21 04:02:00.00', 12.00, 'Travel', 'pending', 'shimjay1@gmail.com');
@@ -43,3 +54,8 @@ INSERT INTO Ticket VALUES(4, timestamp '2018-08-21 04:04:00.00', 82.00, 'Recreat
 commit;
 
 SELECT MAX(Id) AS "Top" FROM Ticket;
+SELECT Password FROM ManagerPassword;
+
+UPDATE Ticket SET status = 'approved' WHERE id = 3;
+
+

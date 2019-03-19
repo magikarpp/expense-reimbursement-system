@@ -3,12 +3,14 @@ let employeeURL = "employee";
 let ticketURL = "ticket";
 let newTicketURL = "ticket/new";
 
+let approveTicketURL = "ticket/approve";
+let declineTicketURL = "ticket/decline";
+
 let currentUserEmail = document.getElementById("userEmail").innerHTML;
 
-document.addEventListener("DOMContentLoaded", updateProfile);
 document.addEventListener("DOMContentLoaded", updateTicket);
-document.getElementById("createTicketButton").addEventListener("click", createNewTicket);
 
+document.getElementById("search-button").addEventListener("click", searchTicket);
 document.getElementById("all-tickets").addEventListener("click", updateTicket);
 document.getElementById("approved-tickets").addEventListener("click", approvedTickets);
 document.getElementById("pending-tickets").addEventListener("click", pendingTickets);
@@ -22,8 +24,24 @@ currentUser = {
 		"reportsto" : null
 	};
 
-function updateProfile(){
-	sendAjaxPost(employeeURL, updateProfileInfo, currentUser);
+let dummy = null;
+
+function searchTicket(){
+	searchUser = {
+			"email" : document.getElementById("search").value,
+			"name" : null,
+			"password" : null,
+			"ismanager" : null,
+			"reportsto" : null
+		};
+	
+	// For Info
+	document.getElementById("all-tickets").className = "btn";
+	document.getElementById("approved-tickets").className = "btn";
+	document.getElementById("pending-tickets").className = "btn";
+	document.getElementById("declined-tickets").className = "btn";
+	
+	sendAjaxPost(ticketURL, updateTicketInfo, searchUser);
 }
 
 function updateTicket(){
@@ -33,7 +51,7 @@ function updateTicket(){
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn";
 	
-	sendAjaxPost(ticketURL, updateTicketInfo, currentUser);
+	sendAjaxPost(ticketURL, updateTicketInfo, dummy);
 }
 
 function approvedTickets(){
@@ -43,7 +61,7 @@ function approvedTickets(){
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn";
 	
-	sendAjaxPost(ticketURL, approvedTicketsInfo, currentUser);
+	sendAjaxPost(ticketURL, approvedTicketsInfo, dummy);
 }
 
 function pendingTickets(){
@@ -53,7 +71,7 @@ function pendingTickets(){
 	document.getElementById("pending-tickets").className = "btn btn-secondary";
 	document.getElementById("declined-tickets").className = "btn";
 	
-	sendAjaxPost(ticketURL, pendingTicketsInfo, currentUser);
+	sendAjaxPost(ticketURL, pendingTicketsInfo, dummy);
 }
 
 function declinedTickets(){
@@ -63,36 +81,9 @@ function declinedTickets(){
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn btn-secondary";
 	
-	sendAjaxPost(ticketURL, declinedTicketsInfo, currentUser);
+	sendAjaxPost(ticketURL, declinedTicketsInfo, dummy);
 }
 
-function updateProfileInfo(xhr, currentUser){
-	let data = JSON.parse(xhr.response);
-	
-	if(data[0].ismanager == 0){
-		document.getElementById("changeView").style.display="none";
-		document.getElementById("changeView").style.visibility="hidden";
-	}
-}
-
-function createNewTicket(){
-	let selected = document.getElementById("category");
-	
-	ticket = {
-		"id" : null,
-		"date" : null,
-		"amount" : document.getElementById("newTicketAmount").value,
-		"category" : selected.options[selected.selectedIndex].text,
-		"status" : "pending",
-		"email" : currentUserEmail,
-		"resolvedBy" : null
-	};
-	
-	document.getElementById("ticket-error").style = "color : orange";
-	document.getElementById("ticket-error").innerHTML = "Creating Ticket...";
-	
-	sendAjaxPost(newTicketURL, newTicket, ticket);
-}
 
 function updateTicketInfo(xhr, currentUser){
 	let data = JSON.parse(xhr.response);
@@ -119,8 +110,13 @@ function updateTicketInfo(xhr, currentUser){
 			statusStyle = "color : orange";
 		} else{ }
 		
-		let resolvedBy = data[i].resolvedBy;
-		if(resolvedBy == null) resolvedBy = "In Progress";
+		let resolvedBy = "<p class=\"card-text\">Resolved By: " + data[i].resolvedBy + "</p> ";
+		if(data[i].resolvedBy == null) resolvedBy = "";
+		
+		let showStyle = "visibility : hidden; display : none";
+		if(data[i].status == "pending"){
+			showStyle = "";
+		}
 		
 		document.getElementById(ticketId).innerHTML =
 		"<div class=\"card h-100\"> " +
@@ -130,10 +126,13 @@ function updateTicketInfo(xhr, currentUser){
 						"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 					"</h5> " +
 					"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+					"<p class=\"card-text\">Employee: " + data[i].email + "</p> " +
 					"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
 					"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
 					"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
-					"<p class=\"card-text\">Resolved By: " + resolvedBy + "</p> " +
+					resolvedBy +
+					"<button onclick=\"approveTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"approveButton\" type=\"button\">Approve</button>" +
+					"<button onclick=\"declineTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"declineButton\" type=\"button\">Decline</button>" +
 				"</div> </div>";
 	}
 	
@@ -165,8 +164,13 @@ function approvedTicketsInfo(xhr, currentUser){
 				statusStyle = "color : orange";
 			} else{ }
 			
-			let resolvedBy = data[i].resolvedBy;
-			if(resolvedBy == null) resolvedBy = "In Progress";
+			let resolvedBy = "<p class=\"card-text\">Resolved By: " + data[i].resolvedBy + "</p> ";
+			if(data[i].resolvedBy == null) resolvedBy = "";
+			
+			let showStyle = "visibility : hidden; display : none";
+			if(data[i].status == "pending"){
+				showStyle = "";
+			}
 			
 			document.getElementById(ticketId).innerHTML =
 			"<div class=\"card h-100\"> " +
@@ -176,10 +180,13 @@ function approvedTicketsInfo(xhr, currentUser){
 							"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 						"</h5> " +
 						"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+						"<p class=\"card-text\">Employee: " + data[i].email + "</p> " +
 						"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
 						"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
 						"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
-						"<p class=\"card-text\">Resolved By: " + resolvedBy + "</p> " +
+						resolvedBy +
+						"<button onclick=\"approveTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"approveButton\" type=\"button\">Approve</button>" +
+						"<button onclick=\"declineTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"declineButton\" type=\"button\">Decline</button>" +
 					"</div> </div>";
 		}
 	}
@@ -212,8 +219,13 @@ function pendingTicketsInfo(xhr, currentUser){
 				statusStyle = "color : orange";
 			} else{ }
 			
-			let resolvedBy = data[i].resolvedBy;
-			if(resolvedBy == null) resolvedBy = "In Progress";
+			let resolvedBy = "<p class=\"card-text\">Resolved By: " + data[i].resolvedBy + "</p> ";
+			if(data[i].resolvedBy == null) resolvedBy = "";
+			
+			let showStyle = "visibility : hidden; display : none";
+			if(data[i].status == "pending"){
+				showStyle = "";
+			}
 			
 			document.getElementById(ticketId).innerHTML =
 			"<div class=\"card h-100\"> " +
@@ -223,10 +235,13 @@ function pendingTicketsInfo(xhr, currentUser){
 							"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 						"</h5> " +
 						"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+						"<p class=\"card-text\">Employee: " + data[i].email + "</p> " +
 						"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
 						"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
 						"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
-						"<p class=\"card-text\">Resolved By: " + resolvedBy + "</p> " +
+						resolvedBy +
+						"<button onclick=\"approveTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"approveButton\" type=\"button\">Approve</button>" +
+						"<button onclick=\"declineTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"declineButton\" type=\"button\">Decline</button>" +
 					"</div> </div>";
 		}
 	}
@@ -259,8 +274,13 @@ function declinedTicketsInfo(xhr, currentUser){
 				statusStyle = "color : orange";
 			} else{ }
 			
-			let resolvedBy = data[i].resolvedBy;
-			if(resolvedBy == null) resolvedBy = "In Progress";
+			let resolvedBy = "<p class=\"card-text\">Resolved By: " + data[i].resolvedBy + "</p> ";
+			if(data[i].resolvedBy == null) resolvedBy = "";
+			
+			let showStyle = "visibility : hidden; display : none";
+			if(data[i].status == "pending"){
+				showStyle = "";
+			}
 			
 			document.getElementById(ticketId).innerHTML =
 			"<div class=\"card h-100\"> " +
@@ -270,24 +290,38 @@ function declinedTicketsInfo(xhr, currentUser){
 							"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 						"</h5> " +
 						"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+						"<p class=\"card-text\">Employee: " + data[i].email + "</p> " +
 						"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
 						"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
 						"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
-						"<p class=\"card-text\">Resolved By: " + resolvedBy + "</p> " +
+						resolvedBy +
+						"<button onclick=\"approveTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"approveButton\" type=\"button\">Approve</button>" +
+						"<button onclick=\"declineTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"declineButton\" type=\"button\">Decline</button>" +
 					"</div> </div>";
 		}
-	}
+	}	
 	
 }
 
-function newTicket(xhr, ticket){
-	let data = xhr.response
-	console.log(data);
+function approveTicket(ticketId){
+	let ticketAndEmail = ticketId + " " + currentUserEmail;
+	sendAjaxPost(approveTicketURL, ticketStatus, ticketAndEmail);
+}
+
+function declineTicket(ticketId){
+	let ticketAndEmail = ticketId + " " + currentUserEmail;
+	sendAjaxPost(declineTicketURL, ticketStatus, ticketAndEmail);
+}
+
+function ticketStatus(xhr, ticketId){
+	let data = xhr.response;
+	
 	if(data == "success"){
-		window.location.replace("edashboard");
+		window.location.replace('/ers/mtickets');
 	} else{
+		console.log(data);
 		document.getElementById("ticket-error").style = "color : red";
-		document.getElementById("ticket-error").innerHTML = "Failed To Create Ticket";
+		document.getElementById("ticket-error").innerHTML = "Error Processing Ticket..."
 	}
 }
 
@@ -335,7 +369,6 @@ function sendAjaxPost(url, callback, data){
  
     xhr.send(jsonData);
 }
-
 //// AJAX PUT call.
 //function sendAjaxPut(url, callback, data){
 //    let xhr = new XMLHttpRequest();

@@ -2,71 +2,21 @@
 let employeeURL = "employee";
 let ticketURL = "ticket";
 let newTicketURL = "ticket/new";
+let approveTicketURL = "ticket/approve";
+let declineTicketURL = "ticket/decline";
 
 let currentUserEmail = document.getElementById("userEmail").innerHTML;
 
-document.addEventListener("DOMContentLoaded", updateProfile);
 document.addEventListener("DOMContentLoaded", updateTicket);
-document.getElementById("createTicketButton").addEventListener("click", createNewTicket);
 
-currentUser = {
-		"email" : currentUserEmail,
-		"name" : null,
-		"password" : null,
-		"ismanager" : null,
-		"reportsto" : null
-	};
-
-function updateProfile(){
-	sendAjaxPost(employeeURL, updateProfileInfo, currentUser);
-}
 
 function updateTicket(){
 	// For Info & Charts
-	sendAjaxPost(ticketURL, updateTicketInfo, currentUser);
+	nothing = {};
+	sendAjaxPost(ticketURL, updateTicketInfo, nothing);
 }
 
-function createNewTicket(){
-	let selected = document.getElementById("category");
-	
-	ticket = {
-		"id" : null,
-		"date" : null,
-		"amount" : document.getElementById("newTicketAmount").value,
-		"category" : selected.options[selected.selectedIndex].text,
-		"status" : "pending",
-		"email" : currentUserEmail,
-		"resolvedBy" : null
-	};
-	
-	document.getElementById("ticket-error").style = "color : orange";
-	document.getElementById("ticket-error").innerHTML = "Creating Ticket...";
-	
-	sendAjaxPost(newTicketURL, newTicket, ticket);
-}
-
-function updateProfileInfo(xhr, currentUser){
-	let data = JSON.parse(xhr.response);
-	
-	document.getElementById("userName").innerHTML = data[0].name;
-	
-	if(data[0].ismanager == 0){
-		document.getElementById("changeView").style.display="none";
-		document.getElementById("changeView").style.visibility="hidden";
-	}
-	
-	if(data[0].reportsto == null){
-		
-		document.getElementById("userManagerEmail").innerHTML = "None";
-		document.getElementById("userManager").innerHTML = "None";
-	} else{
-		document.getElementById("userManagerEmail").innerHTML = data[1].email;
-		document.getElementById("userManager").innerHTML = data[1].name;
-	}
-	
-}
-
-function updateTicketInfo(xhr, currentUser){
+function updateTicketInfo(xhr, nothing){
 	let data = JSON.parse(xhr.response);
 	
 	data.sort(function (a, b) {
@@ -74,7 +24,6 @@ function updateTicketInfo(xhr, currentUser){
 	});
 	
 	// FOR INFORMATION 
-	document.getElementById("userTicketAmount").innerHTML = data.length;
 	
 	for(i = 0; i < data.length; i++){
 		if(i == 3){
@@ -93,8 +42,14 @@ function updateTicketInfo(xhr, currentUser){
 			statusStyle = "color : orange";
 		} else{ }
 		
-		let resolvedBy = data[i].resolvedBy;
-		if(resolvedBy == null) resolvedBy = "In Progress";
+		// Ticket Display
+		let resolvedBy = "<p class=\"card-text\">Resolved By: " + data[i].resolvedBy + "</p> ";
+		if(data[i].resolvedBy == null) resolvedBy = "";
+		
+		let showStyle = "visibility : hidden; display : none";
+		if(data[i].status == "pending"){
+			showStyle = "";
+		}
 		
 		document.getElementById(ticketId).innerHTML =
 		"<div class=\"card h-100\"> " +
@@ -104,10 +59,13 @@ function updateTicketInfo(xhr, currentUser){
 						"<p style=\"color : darkturquoise\"\">Ticket ID: " + data[i].id + "</p> " +
 					"</h5> " +
 					"<p class=\"card-text\" style=\"" + statusStyle + "\">" + data[i].status + "</p> " +
+					"<p class=\"card-text\">Employee: " + data[i].email + "</p> " +
 					"<p class=\"card-text\">Date: " + new Date(data[i].date).toLocaleString() + "</p> " +
 					"<p class=\"card-text\">Amount: $" + data[i].amount + "</p> " +
 					"<p class=\"card-text\">Category: " + data[i].category + "</p> " +
-					"<p class=\"card-text\">Resolved By: " + resolvedBy + "</p> " +
+					resolvedBy +
+					"<button onclick=\"approveTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"approveButton\" type=\"button\">Approve</button>" +
+					"<button onclick=\"declineTicket(" + data[i].id + ")\" class=\"btn m-1\" style=\"" + showStyle + "\" id=\"declineButton\" type=\"button\">Decline</button>" +
 				"</div> </div>";
 	}
 	
@@ -122,9 +80,21 @@ function updateTicketInfo(xhr, currentUser){
 		let countApproved = 0;
 		let countPending = 0;
 		let countDeclined = 0;
+		let minAmount = null;
+		let maxAmount = 0;
 		
 		for(i = 0; i < data.length; i++){
 			currData = data[i];
+			if(minAmount == null){
+				minAmount = currData.amount;
+			} else if(currData.amount < minAmount){
+				minAmount = currData.amount;
+			}
+			
+			if(currData.amount > maxAmount){
+				maxAmount = currData.amount;
+			}
+			
 			if(currData.category == "Travel"){
 				totalTravel += currData.amount;
 			} else if(currData.category == "Recreation"){
@@ -144,6 +114,14 @@ function updateTicketInfo(xhr, currentUser){
 				countDeclined += 1;
 			}
 		}
+		
+		// FOR INFO
+		document.getElementById("totalTickets").innerHTML = totalCount;
+		document.getElementById("totalAmount").innerHTML = "$" + totalAmount;
+		document.getElementById("averageAmount").innerHTML = "$" + (totalAmount / totalCount).toFixed(2);
+		document.getElementById("minAmount").innerHTML = "$" + minAmount;
+		document.getElementById("maxAmount").innerHTML = "$" + maxAmount;
+		
 		
 		//  chart0
 		var chart0 = new CanvasJS.Chart("chartContainer0", {
@@ -209,14 +187,25 @@ function updateTicketInfo(xhr, currentUser){
 	
 }
 
-function newTicket(xhr, ticket){
-	let data = xhr.response
-	console.log(data);
+function approveTicket(ticketId){
+	let ticketAndEmail = ticketId + " " + currentUserEmail;
+	sendAjaxPost(approveTicketURL, ticketStatus, ticketAndEmail);
+}
+
+function declineTicket(ticketId){
+	let ticketAndEmail = ticketId + " " + currentUserEmail;
+	sendAjaxPost(declineTicketURL, ticketStatus, ticketAndEmail);
+}
+
+function ticketStatus(xhr, ticketId){
+	let data = xhr.response;
+	
 	if(data == "success"){
-		window.location.replace("edashboard");
+		window.location.replace('/ers/mdashboard');
 	} else{
+		console.log(data);
 		document.getElementById("ticket-error").style = "color : red";
-		document.getElementById("ticket-error").innerHTML = "Failed To Create Ticket";
+		document.getElementById("ticket-error").innerHTML = "Error Processing Ticket..."
 	}
 }
 

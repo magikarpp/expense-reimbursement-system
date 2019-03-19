@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		
-		<title>Dashboard</title>
+		<title>Profile</title>
 		
 		<!-- BootStrap CDN -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
@@ -37,7 +37,7 @@
 				<div class="list-group list-group-flush">
 					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mytickets');" class="list-group-item list-group-item-action bg-light">Tickets</a>
-					<a href="#" class="list-group-item list-group-item-action bg-light">Manager</a>
+					<a onclick="window.location.replace('/ers/mymanager');" class="list-group-item list-group-item-action bg-light">Manager</a>
 					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action">Profile</a>
 				</div>
 		   </div>
@@ -55,7 +55,9 @@
 			        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
 			        	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" onclick="document.getElementById('id01').style.display='block'">Create New Ticket</a>
-							<a id="changeView" class="dropdown-item" href="#">Change View</a>
+							<form id="changeViewForm" action="mdashboard" method="GET">
+								<a id="changeView" class="dropdown-item" onclick="document.getElementById('changeViewForm').submit();">Change View</a>
+							</form>
 							<div class="dropdown-divider"></div>
 							<form id="logoutForm" action="logout" method="POST">
 								<a class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">Logout</a>
@@ -128,6 +130,11 @@
 							<input type="text" style="visibility: hidden; display: none;" id="newName" required>
 						</div>
 						<div class="column-split">
+							<h6>Password:</h6>
+							<h6 id="passwordInfo"></h6>
+							<input type="password" style="visibility: hidden; display: none;" id="newPassword" required>
+							<h6 id="passwordConfirm" style="visibility: hidden; display: none;">Confirm Password:</h6>
+							<input type="password" style="visibility: hidden; display: none;" id="newPassword2" required>
 						</div>
 					</div>	
 					<div class="box">

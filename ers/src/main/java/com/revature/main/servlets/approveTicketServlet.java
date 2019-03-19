@@ -8,24 +8,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.main.handlers.Handler;
-import com.revature.main.models.Employee;
 
-public class updateEmployeeServlet extends HttpServlet {
+public class approveTicketServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 6831085441048570808L;
 	
 	private Handler handler = new Handler();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		PrintWriter pw = response.getWriter();
-		ObjectMapper om = new ObjectMapper();
-		Employee tempEmployee = om.readValue(request.getInputStream(), Employee.class);
+		String[] things = request.getReader().readLine().split(" ");
 		
-		if(handler.updateEmployee(tempEmployee.getDummy(), tempEmployee)) pw.print("success");
+		String[] info = (things[0] + " " + things[1]).substring(1, (things[0]+things[1]+1).length()-1).split(" ");
+		
+		int ticketId = Integer.parseInt(info[0]);
+		String email = info[1];
+		
+		boolean approved = handler.approveTicket(ticketId, email);
+		
+		PrintWriter pw = response.getWriter();
+		
+		if(approved) pw.print("success");
 		else pw.print("failure");
 		
 		pw.close();
+			
 	}
+	
+	
 }

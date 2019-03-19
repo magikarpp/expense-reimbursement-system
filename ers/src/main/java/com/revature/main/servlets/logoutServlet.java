@@ -16,7 +16,7 @@ public class logoutServlet extends HttpServlet {
 		response.setContentType("text/html");
   
     	HttpSession session = request.getSession(false);
-    	System.out.println("User="+session.getAttribute("user"));
+    	
     	if(session != null){
     		session.invalidate();
     	}

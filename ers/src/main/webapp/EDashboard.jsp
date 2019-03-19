@@ -37,7 +37,7 @@
 				<div class="list-group list-group-flush">
 					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mytickets');" class="list-group-item list-group-item-action bg-light">Tickets</a>
-					<a href="#" class="list-group-item list-group-item-action bg-light">Manager</a>
+					<a onclick="window.location.replace('/ers/mymanager');" class="list-group-item list-group-item-action bg-light">Manager</a>
 					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action bg-light">Profile</a>
 				</div>
 		   </div>
@@ -55,7 +55,9 @@
 			        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
 			        	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" onclick="document.getElementById('id01').style.display='block'">Create New Ticket</a>
-							<a id="changeView" class="dropdown-item" href="#">Change View</a>
+							<form id="changeViewForm" action="mdashboard" method="GET">
+								<a id="changeView" class="dropdown-item" onclick="document.getElementById('changeViewForm').submit();">Change View</a>
+							</form>
 							<div class="dropdown-divider"></div>
 							<form id="logoutForm" action="logout" method="POST">
 								<a class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">Logout</a>

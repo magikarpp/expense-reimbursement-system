@@ -10,18 +10,20 @@ public class Ticket {
 	private String category;
 	private String status;
 	private String email;
+	private String resolvedBy;
 	
 	public Ticket() {
 		super();
 	}
 	
-	public Ticket(int id, Timestamp date, double amount, String category, String status, String email) {
+	public Ticket(int id, Timestamp date, double amount, String category, String status, String email, String resolvedBy) {
 		this.id = id;
 		this.date = date;
 		this.amount = amount;
 		this.category = category;
 		this.status = status;
 		this.email = email;
+		this.resolvedBy = resolvedBy;
 	}
 	
 	public int getId() {
@@ -65,6 +67,14 @@ public class Ticket {
 	public String toString() {
 		return "Ticket [id=" + id + ", date=" + date + ", amount=" + amount + ", category=" + category + ", status="
 				+ status + ", email=" + email + "]";
+	}
+
+	public String getResolvedBy() {
+		return resolvedBy;
+	}
+
+	public void setResolvedBy(String resolvedBy) {
+		this.resolvedBy = resolvedBy;
 	}
 	
 	

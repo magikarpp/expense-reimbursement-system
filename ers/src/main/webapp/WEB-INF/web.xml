@@ -93,4 +93,58 @@
 		<url-pattern>/employee/update</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>EManagerServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.EManagerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EManagerServlet</servlet-name>
+		<url-pattern>/mymanager</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ManagerValidateServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.managerValidateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ManagerValidateServlet</servlet-name>
+		<url-pattern>/manager/validate</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>MDashboardServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.MDashboardServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MDashboardServlet</servlet-name>
+		<url-pattern>/mdashboard</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>approveTicketServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.approveTicketServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>approveTicketServlet</servlet-name>
+		<url-pattern>/ticket/approve</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>declineTicketServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.declineTicketServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>declineTicketServlet</servlet-name>
+		<url-pattern>/ticket/decline</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>MTicketsServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.MTicketsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MTicketsServlet</servlet-name>
+		<url-pattern>/mtickets</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

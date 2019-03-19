@@ -35,10 +35,9 @@
 		 	<div class="bg-light border-right" id="sidebar-wrapper">
 			   	<div class="sidebar-heading"></div>
 				<div class="list-group list-group-flush">
-					<a onclick="window.location.replace('/ers/edashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
-					<a onclick="window.location.replace('/ers/mytickets');" class="list-group-item list-group-item-action">Tickets</a>
-					<a onclick="window.location.replace('/ers/mymanager');" class="list-group-item list-group-item-action bg-light">Manager</a>
-					<a onclick="window.location.replace('/ers/profile');" class="list-group-item list-group-item-action bg-light">Profile</a>
+					<a onclick="window.location.replace('/ers/mdashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+					<a onclick="window.location.replace('/ers/mtickets');" class="list-group-item list-group-item-action">Tickets</a>
+					<a onclick="window.location.replace('/ers/mmanager');" class="list-group-item list-group-item-action bg-light">Manager</a>
 				</div>
 		   </div>
 		
@@ -47,14 +46,13 @@
 		   
 			<!--  TOP NAVBAR -->
 			<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-				<h5>Expense Reimbursement System <small>(Employee)</small></h5>
+				<h5>Expense Reimbursement System <small>(Manager)</small></h5>
 			
 			  	<div class="collapse navbar-collapse top-navvy" id="navbarSupportedContent">
 			    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
 			      	<li class="nav-item dropdown">
 			        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
 			        	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" onclick="document.getElementById('id01').style.display='block'">Create New Ticket</a>
 							<form id="changeViewForm" action="mdashboard" method="GET">
 								<a id="changeView" class="dropdown-item" onclick="document.getElementById('changeViewForm').submit();">Change View</a>
 							</form>
@@ -67,49 +65,6 @@
 			    </ul>
 			  	</div>
 			</nav>
-
-			<!-- CREATE NEW TICKET MODAL -->
-			<div id="id01" class="modal">
-			  <div class="modal-content animate">
-				  <form>
-				    <div class="title-container">
-				   	  <h4 class="text-center">Create New Ticket</h4>
-				      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>	
-				    </div>
-				    <div class="form-group">
-						<div class="container">
-				              <div class="form-label-group">
-				             	 <label for="amount"><b>Amount: *</b></label>
-				                 <input type="number" id="newTicketAmount" class="form-control" placeholder="Enter Total Amount"  name="amount" min="0" required>
-				              </div>
-							  <br>
-				              <div class="form-label-group">
-								 <label for="category"><b>Category: *</b></label>
-								 <select class="form-control" name="category" id="category" required>
-							       <option>Travel</option>
-							       <option>Recreation</option>
-							       <option>Food</option>
-							       <option>Miscellaneous</option>
-							     </select>
-							  </div>
-							  <br>
-							  <div class="form-label-group">
-								 <label for="pic"><b>Receipt Picture: </b></label>
-								 <input type="file" id="newTicketPicture" class="form-control" name="pic" accept="image/*">
-					          </div>
-					          
-				        	  <div class="mb-3">
-				        	  </div>
-						 </div>
-					 </div>
-				  </form>
-				  <div class="text-center">
-		        	<span id="ticket-error" class="center-align"></span>
-		      	 </div>
-				  <button class="btn-primary text-uppercase" id="createTicketButton" type="button">Submit</button>
-			  </div>
-			</div>
-			<!-- end of TICKET MODAL -->
 			<!-- end of TOP NAVBAR -->
 			
 			<!--  MAIN CONTENT -->
@@ -117,12 +72,15 @@
 			
 				<!-- TICKETS -->
 				<div class="ticket-container">
-					<h5 class="mt-4" id="ticket-title">My Tickets</h5>
+					<h5 class="mt-4" id="ticket-title">Tickets</h5>
 					<div class="m-2">
 						<button id="all-tickets" class="btn btn-secondary">All</button>
 						<button id="approved-tickets" class="btn">Approved</button>
 						<button id="pending-tickets" class="btn">Pending</button>
 						<button id="declined-tickets" class="btn">Declined</button>
+						<label class="ml-5" for="search">Search By Email:</label>
+						<input type=email id="search">
+						<button id="search-button">Search</button>
 					</div>
 					<div id="ticketsRow" class="row">
 					  
@@ -186,7 +144,7 @@
 		
 	 </div>
 	
-	<script src="js/ETicketsJS.js"></script>
+	<script src="js/MTicketsJS.js"></script>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	</body>
 
