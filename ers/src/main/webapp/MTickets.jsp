@@ -37,7 +37,7 @@
 				<div class="list-group list-group-flush">
 					<a onclick="window.location.replace('/ers/mdashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mtickets');" class="list-group-item list-group-item-action">Tickets</a>
-					<a onclick="window.location.replace('/ers/mmanager');" class="list-group-item list-group-item-action bg-light">Manager</a>
+					<a onclick="window.location.replace('/ers/memployee');" class="list-group-item list-group-item-action bg-light">Employees</a>
 				</div>
 		   </div>
 		

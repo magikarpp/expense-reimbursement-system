@@ -70,7 +70,7 @@ function updateTicketInfo(xhr, nothing){
 	}
 	
 	if(data.length > 0){
-		// FOR CHARTS
+		// FOR CHARTS and INFO
 		let totalCount = data.length;
 		let totalAmount = 0;
 		let totalTravel = 0;
@@ -82,6 +82,9 @@ function updateTicketInfo(xhr, nothing){
 		let countDeclined = 0;
 		let minAmount = null;
 		let maxAmount = 0;
+		let pendingAmount = 0;
+		let approvedAmount = 0;
+		let declinedAmount = 0;
 		
 		for(i = 0; i < data.length; i++){
 			currData = data[i];
@@ -108,16 +111,21 @@ function updateTicketInfo(xhr, nothing){
 			
 			if(currData.status == "pending"){
 				countPending += 1;
+				pendingAmount += currData.amount;
 			} else if(currData.status == "approved"){
 				countApproved += 1;
+				approvedAmount += currData.amount;
 			} else {
 				countDeclined += 1;
+				declinedAmount += currData.amount;
 			}
 		}
 		
 		// FOR INFO
 		document.getElementById("totalTickets").innerHTML = totalCount;
-		document.getElementById("totalAmount").innerHTML = "$" + totalAmount;
+		document.getElementById("pendingAmount").innerHTML = "$" + pendingAmount;
+		document.getElementById("approvedAmount").innerHTML = "$" + approvedAmount;
+		document.getElementById("declinedAmount").innerHTML = "$" + declinedAmount;
 		document.getElementById("averageAmount").innerHTML = "$" + (totalAmount / totalCount).toFixed(2);
 		document.getElementById("minAmount").innerHTML = "$" + minAmount;
 		document.getElementById("maxAmount").innerHTML = "$" + maxAmount;

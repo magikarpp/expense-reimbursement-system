@@ -119,7 +119,7 @@
 			  <div class="modal-content animate">
 				  <form>
 				    <div class="title-container">
-				   	  <h4 class="text-center">Change to Manager</h4>
+				   	  <h4 class="text-center">Evolve to Manager</h4>
 				      <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>	
 				    </div>
 				    <div class="form-group">

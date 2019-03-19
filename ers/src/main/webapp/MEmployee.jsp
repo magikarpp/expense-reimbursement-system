@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		
-		<title>Dashboard</title>
+		<title>Tickets</title>
 		
 		<!-- BootStrap CDN -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
@@ -21,7 +21,7 @@
 		<link href="styles/style.css" rel="stylesheet">
 	
 	</head>
-
+	
 	<body>
 	<%
 	//allow access only if session exists
@@ -29,16 +29,15 @@
 	if(session.getAttribute("user") == null){
 		response.sendRedirect("login");
 	} else user = (String) session.getAttribute("user");
-
 	%>
 
 		 <div class="d-flex">
 		 	<div class="bg-light border-right" id="sidebar-wrapper">
 			   	<div class="sidebar-heading"></div>
 				<div class="list-group list-group-flush">
-					<a onclick="window.location.replace('/ers/mdashboard');" class="list-group-item list-group-item-action">Dashboard</a>
+					<a onclick="window.location.replace('/ers/mdashboard');" class="list-group-item list-group-item-action bg-light">Dashboard</a>
 					<a onclick="window.location.replace('/ers/mtickets');" class="list-group-item list-group-item-action bg-light">Tickets</a>
-					<a onclick="window.location.replace('/ers/memployee');" class="list-group-item list-group-item-action bg-light">Employees</a>
+					<a onclick="window.location.replace('/ers/memployee');" class="list-group-item list-group-item-action">Employees</a>
 				</div>
 		   </div>
 		
@@ -54,7 +53,7 @@
 			      	<li class="nav-item dropdown">
 			        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
 			        	<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-							<form id="changeViewForm" action="edashboard" method="GET">
+							<form id="changeViewForm" action="mdashboard" method="GET">
 								<a id="changeView" class="dropdown-item" onclick="document.getElementById('changeViewForm').submit();">Change View</a>
 							</form>
 							<div class="dropdown-divider"></div>
@@ -70,13 +69,28 @@
 			
 			<!--  MAIN CONTENT -->
 			<div class="container-fluid">
-						
-				<!-- TICKETS -->
-				<h5 class="mt-4">Tickets <small>(Most recent)</small></h5>
+			
+				<!-- EMPLOYEES -->
+				<div class="employee-container">
+					<h5 class="mt-4" id="employee-title">Employees</h5>
+					<div class="m-2">
+						<button id="all-employees-button" class="btn btn-secondary">All</button>
+						<button id="my-employees-button" class="btn">My</button>
+						<label class="ml-5" for="search">Search By Email:</label>
+						<input type=email id="search">
+						<button id="search-button">Search</button>
+					</div>
+					<div id="employeeRow" class="row">
+					  
+					</div>
+				</div>
+				<!-- end of EMPLOYEES -->
+				
+				<!-- FILLER -->
 				<div id="ticketsRow" class="row">
 				
 				  <div id="ticket1" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -88,7 +102,7 @@
 				  </div>
 				  
 				  <div id="ticket2" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -100,7 +114,7 @@
 				  </div>
 				  
 				  <div id="ticket3" style="visibility : hidden" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-				    <div class="card h-100">
+				    <div class="card h-50">
 				      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
 				      <div class="card-body">
 				        <h5 class="card-title">
@@ -112,62 +126,7 @@
 				  </div>
 				  
 				</div>
-				<div>
-					<p id="ticket-error"></p>
-				</div>
-				
-				<!-- end of TICKETS -->
-				
-				<!-- INFO -->
-				<h5 class="mt-4">Info</h5>
-				<div class="card col-lg-9">
-					<div class="box">
-						<div class="column-split">
-							<h6>Total Tickets:</h6>
-							<h6 id="totalTickets"></h6>
-						</div>
-						<div class="column-split">
-						</div>
-						<div class="column-split">
-						</div>
-					</div>	
-					<div class="box">
-						<div class="column-split">
-							<h6>Pending Amount:</h6>
-							<h6 id="pendingAmount"></h6>	
-						</div>
-						<div class="column-split">
-							<h6>Approved Amount:</h6>
-							<h6 id="approvedAmount"></h6>
-						</div>
-						<div class="column-split">
-							<h6>Declined Amount:</h6>
-							<h6 id="declinedAmount"></h6>
-						</div>
-					</div>
-					<div class="box">
-						<div class="column-split">
-							<h6>Average Amount:</h6>
-							<h6 id="averageAmount"></h6>	
-						</div>
-						<div class="column-split">
-							<h6>Min Amount:</h6>
-							<h6 id="minAmount"></h6>
-						</div>
-						<div class="column-split">
-							<h6>Max Amount:</h6>
-							<h6 id="maxAmount"></h6>
-						</div>
-					</div>
-				</div>
-				<!-- end of INFO -->
-				
-				<!-- CHARTS -->
-				<div class="mt-5" id="chartContainer0" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				<div class="mt-5" id="chartContainer1" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				<div class="mt-5" id="chartContainer2" style="height: 420px; max-width: 1000px; width: 100%;"></div>
-				
-				<!-- end of CHARTS -->
+				<!-- end of FILLER -->
 				
 				<!-- FEEDER -->
 				<div class="bottom-feeder">
@@ -183,7 +142,7 @@
 		
 	 </div>
 	
-	<script src="js/MDashboardJS.js"></script>
+	<script src="js/MEmployeeJS.js"></script>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 	</body>
 

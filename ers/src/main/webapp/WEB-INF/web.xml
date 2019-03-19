@@ -147,4 +147,22 @@
 		<url-pattern>/mtickets</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>MEmployeeServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.MEmployeeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MEmployeeServlet</servlet-name>
+		<url-pattern>/memployee</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>managerBecomeServlet</servlet-name>
+		<servlet-class>com.revature.main.servlets.managerBecomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>managerBecomeServlet</servlet-name>
+		<url-pattern>/manager/become</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

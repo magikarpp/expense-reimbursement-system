@@ -449,4 +449,26 @@ public class Handler {
 		return declined;
 	}
 	
+	public boolean becomeManagerOf(String goonEmail, String managerEmail) {
+		boolean success = false;
+		
+		String sql = "UPDATE employee SET reportsto = ? WHERE email = ?";
+		
+		try(Connection con = ConnectionUtil.getConnectionFromFile();
+			PreparedStatement ps = con.prepareStatement(sql);){
+			
+			ps.setString(1, managerEmail);
+			ps.setString(2, goonEmail);
+			ps.executeUpdate();
+			success = true;
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		return success;
+	}
+	
 }

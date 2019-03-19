@@ -20,16 +20,17 @@ public class MDashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession(false);
-		
-		if(session.getAttribute("user") == null){
-    		response.sendRedirect("/ers/login");
-    	} else {
+
+		try {
     		if(handler.isManager(session.getAttribute("user").toString())) {
     			RequestDispatcher rd = request.getRequestDispatcher("MDashboard.jsp");
     			rd.forward(request, response);
     		} else {
     			response.sendRedirect("/ers/login");
     		}
-    	}
+		} catch(Exception e) {
+			response.sendRedirect("/ers/login");
+		}
+		
 	}
 }

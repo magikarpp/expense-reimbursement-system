@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.revature.main.handlers.Handler;
 
-public class MTicketsServlet extends HttpServlet {
+public class MEmployeeServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 6831085441048455708L;
 	
@@ -22,7 +22,7 @@ public class MTicketsServlet extends HttpServlet {
 		
 		try {
     		if(handler.isManager(session.getAttribute("user").toString())) {
-    			RequestDispatcher rd = request.getRequestDispatcher("MTickets.jsp");
+    			RequestDispatcher rd = request.getRequestDispatcher("MEmployee.jsp");
     			rd.forward(request, response);
     		} else {
     			response.sendRedirect("/ers/login");
@@ -30,6 +30,5 @@ public class MTicketsServlet extends HttpServlet {
 		} catch(Exception e) {
 			response.sendRedirect("/ers/login");
 		}
-		
 	}
 }

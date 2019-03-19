@@ -50,6 +50,7 @@ function updateTicket(){
 	document.getElementById("approved-tickets").className = "btn";
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn";
+	document.getElementById("search").value = "";
 	
 	sendAjaxPost(ticketURL, updateTicketInfo, dummy);
 }
@@ -60,6 +61,7 @@ function approvedTickets(){
 	document.getElementById("approved-tickets").className = "btn btn-secondary";
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn";
+	document.getElementById("search").value = "";
 	
 	sendAjaxPost(ticketURL, approvedTicketsInfo, dummy);
 }
@@ -70,6 +72,7 @@ function pendingTickets(){
 	document.getElementById("approved-tickets").className = "btn";
 	document.getElementById("pending-tickets").className = "btn btn-secondary";
 	document.getElementById("declined-tickets").className = "btn";
+	document.getElementById("search").value = "";
 	
 	sendAjaxPost(ticketURL, pendingTicketsInfo, dummy);
 }
@@ -80,6 +83,7 @@ function declinedTickets(){
 	document.getElementById("approved-tickets").className = "btn";
 	document.getElementById("pending-tickets").className = "btn";
 	document.getElementById("declined-tickets").className = "btn btn-secondary";
+	document.getElementById("search").value = "";
 	
 	sendAjaxPost(ticketURL, declinedTicketsInfo, dummy);
 }
